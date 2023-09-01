@@ -1,34 +1,146 @@
 body {
-    background-color: slategray;
+    background-color: lightgrey;
     text-align: center;
+    font-family: Helvetica, sans-serif, Arial;
+    margin: 0%;
 }
 
-p {
-    color: white;
-    font-size: 1.2em;
-    margin: 20px;
-}
+:root {
+    touch-action: pan-x pan-y;
+    height: 100% 
+  }
 
-img {
-    margin: 60px 0 30px 0;
-    width: 250px;
+.app_header {
+    font-size: 8vw;
+    text-align: center;
+    font-family: Helvetica, sans-serif, Arial;
+    font-weight: 900;
+    margin: 10px;
 }
-
+.task_header {
+    font-size: 6vw;
+    font-weight: 400;
+    text-align: left;
+    font-family: Helvetica, sans-serif, Arial;
+    margin: 10px;
+}
 
 input{
     width: 300px;
     height: 30px;
-    margin: 20px;
+    margin: 10px;
     border: none;
-    border-radius: 10px;
+    border-radius: 3px;
     text-align: center;
-    font-size: 1.3em;
+    font-size: 1em;
+}
+
+.input_taskname {
+    width: 50%;
+}
+
+.input_targetbpm {
+    width: 10%;
+}
+
+.input_date {
+    width: 50%;
+}
+
+.input_bpm {
+    width: 10%;
+}
+
+
+
+button {
+    width: 50px;
+    height: 30px;
+    margin: 5px;
+    border: none;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 1em;
+    color: whitesmoke;
+    background-color: blueviolet;
 }
 
 input:focus{
-    border: solid 2px #00FFCE;
-    outline: none;
+    outline: solid 0.01px #17d637;
+    
 }
+
+.input_date{
+    height: 37px;
+    width: 110px;
+    position: relative;
+    outline: solid 0.01px #17d637;
+    
+}
+
+.progressbar{
+    width: 10%;
+}
+
+.meter_label {
+    font-size: 0.6em;
+    display: inline-block;
+    width: 20px;
+    position: relative;
+    bottom: 2px;
+}
+
+
+
+.task_list_name {
+    width: 40%;
+    display: inline-block;
+    text-align: left;
+}
+
+.session_list_name {
+    width: 80%;
+    display: inline-block;
+    text-align: left;
+}
+
+.btn_home {
+    width: 10px;
+    height: 10px;
+    margin: 10px;
+    border: none;
+    text-align: center;
+    color: rgb(38, 27, 27);
+    position: relative;
+    bottom: 5px;
+    right: 10px;
+}
+
+.btn_item_delete {
+    width: 40px;
+    height: 30px;
+    margin-bottom: 2%;
+    border: none;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 1em;
+    color: whitesmoke;
+    background-color: green;
+}
+
+.btn_header_add {
+    width: 60px;
+    height: 45px;
+    margin: 8px;
+    border: none;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 1em;
+    color: whitesmoke;
+    background-color: green;
+}
+
+
 
 #greet {
     background-color: palevioletred;

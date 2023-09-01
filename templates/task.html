@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Guitar Practice Tracker</title>
 
     <link rel="stylesheet" href="{{ url_for('static',filename='css/main.css')}}">
@@ -13,12 +13,15 @@
 <body>
     <div style="margin-top: 50px;" class="ui container">
         <span class="app_header">Guitar Practice</span>
+        <a class="fa-solid fa-house fa-2xl btn_home" href="/"></a>
         <br>
-
-        <form class="ui form" action="/add" method="post">
+        <span class="task_header"> Task: {{ task.title }} ({{ task.target_bpm }} BPM)</span>
+        <br>
+        <form class="ui form" action="/addsession" method="post">
             <div class="field">
-                <input class="input_taskname" type="text" name="title" placeholder="Enter Practice Task...">
-                <input class="input_targetbpm"type="number" name="target_bpm" placeholder="BPM">
+                <input class="input_date" type="date" name="date" placeholder="Date" value = {{today}}> 
+                <input class="input_bpm"type="number" name="bpm" placeholder="BPM", value = {{last_session.bpm}}>
+                <input type="hidden" name="task_id" value="{{task.id}}">
                 <button class="fa-solid fa-plus btn_header_add" type="submit"></button>
             </div>
             
@@ -26,18 +29,14 @@
 
         <hr>
 
- 
-        
-        <span class="task_list">
-            {% for task in task_list %}
+        <span class="session_list">
+            {% for session in session_list %}
                 <span class="task">
-                <a class="task_list_name" href="/task/{{ task.id }}">{{ task.title }}</a>
-                <span class="meter_label">{{ task.bpm }} </span>
-                <meter id="progressbar" value="{{task.bpm}}" min="0" max= "{{task.target_bpm}}"></meter>
-                <span class="meter_label">{{ task.target_bpm }} </span>
-                <form  style='display: inline;'class="ui form" action="/delete" method="post">
+                <a class="session_list_name">{{ session.date }}   |  ({{ session.bpm }} BPM)</a>
+                <form  style='display: inline;'class="ui form" action="/deletesession" method="post">
                     <span class="field">
                         <input type="hidden" name="task_id" value="{{task.id}}">
+                        <input type="hidden" name="session_id" value="{{session.id}}">
                         <button class="fa-solid fa-trash fa-2xs btn_item_delete" type="submit"></button>
                     </span>
                 </form>
