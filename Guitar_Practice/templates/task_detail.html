@@ -165,7 +165,7 @@
 <body onload="my_onload()" onkeydown="handle_key(event)">
     <div style="margin-top: 50px;" class="ui container">
         <span class="app_header">Guitar Practice</span>
-        <a class="fa-solid fa-house fa-2xl btn_home" href="/"></a>
+        <a class="fa-solid fa-house fa-2xl btn_home" href="/tasks"></a>
         <br>
         <span class="task_header"> Task: {{ task.title }} ({{ task.target_bpm }} BPM)</span>
         <br>
@@ -188,8 +188,8 @@
 
         <form class="ui form" action="/addsession" method="post">
             <div class="field">
-                <input class="input_date" type="date" placeholder="Date" value = {{today}} required> 
-                <input class="input_bpm" id ="input_bpm" type="number" placeholder="BPM" inputmode="decimal" required>
+                <input class="input_date" name="date" type="date"  placeholder="Date" value = {{today}} required> 
+                <input class="input_bpm" id ="input_bpm" name="bpm" type="number" placeholder="BPM" inputmode="decimal" required>
                 <input type="hidden" name="task_id" value="{{task.id}}">
                 <button class="fa-solid fa-plus btn_header_add" type="submit"></button>
             </div>
