@@ -17,8 +17,8 @@
 
         <form class="ui form" action="/add" method="post">
             <div class="field">
-                <input class="input_taskname" type="text" name="title" placeholder="Enter Practice Task...">
-                <input class="input_targetbpm"type="number" name="target_bpm" placeholder="BPM">
+                <input class="input_taskname" type="text" name="title" placeholder="Enter Practice Task..." required>
+                <input class="input_targetbpm"type="number" inputmode="decimal" name="target_bpm" placeholder="BPM" required>
                 <button class="fa-solid fa-plus btn_header_add" type="submit"></button>
             </div>
             
@@ -30,7 +30,7 @@
         
         <span class="task_list">
             {% for task in task_list %}
-                <span class="task">
+                <a class="task"> {{task.last_session_date}} <a/>
                 <a class="task_list_name" href="/task/{{ task.id }}">{{ task.title }}</a>
                 <span class="meter_label">{{ task.bpm }} </span>
                 <meter id="progressbar" value="{{task.bpm}}" min="0" max= "{{task.target_bpm}}"></meter>
@@ -41,8 +41,8 @@
                         <button class="fa-solid fa-trash fa-2xs btn_item_delete" type="submit"></button>
                     </span>
                 </form>
+                <br>
             {% endfor %}
-                </span>
         </span>
         
     </div>

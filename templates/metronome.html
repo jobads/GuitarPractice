@@ -1,13 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Guitar Practice Tracker</title>
-
-    <link rel="stylesheet" href="{{ url_for('static',filename='css/main.css')}}">
-    <script src="https://kit.fontawesome.com/08ebfe01f5.js" crossorigin="anonymous"></script>
+    <meta name="Description" content="Metronome written by Corey Trager in HTML and Javascript">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Metronome</title>
+   
 
     <script>
 
@@ -134,13 +132,11 @@
 
         function change_bpm_field() {
             document.getElementById("my_bpm_input_range").value = document.getElementById("my_bpm_input_field").value;
-            document.getElementById("input_bpm").value  = document.getElementById("my_bpm_input_field").value;
             stop_start()
         }
 
         function change_bpm_range() {
             document.getElementById("my_bpm_input_field").value = document.getElementById("my_bpm_input_range").value;
-            document.getElementById("input_bpm").value  = document.getElementById("my_bpm_input_range").value;
             stop_start()
         }
 
@@ -160,70 +156,56 @@
 
 
     </script>
+
+
+
 </head>
 
 <body onload="my_onload()" onkeydown="handle_key(event)">
-    <div style="margin-top: 50px;" class="ui container">
-        <span class="app_header">Guitar Practice</span>
-        <a class="fa-solid fa-house fa-2xl btn_home" href="/"></a>
-        <br>
-        <span class="task_header"> Task: {{ task.title }} ({{ task.target_bpm }} BPM)</span>
-        <br>
 
-        <div >
-            <div><button onclick="play_or_stop()" id="my_play_button">Start</button></div>
+    <h1>Metronome</h1>
 
-            <div>
-                <input id="my_bpm_input_field" type="number" inputmode="decimal" onchange="change_bpm_field()"  min="40" max="240" step="1" value="{{last_session.bpm}}" />
-                <input id="my_bpm_input_range" type="range" onchange="change_bpm_range()" min="40" max="240" step="1" value="{{last_session.bpm}}" />
-                <button class="plus_minus" onclick="increment_bpm(1)">+</button>
-                <button class="plus_minus" onclick="increment_bpm(-1)">-</button>
-            </div>
-            
-        
-        </div>
+    <div><button onclick="play_or_stop()" id="my_play_button">Start</button></div>
 
-
-
-
-        <form class="ui form" action="/addsession" method="post">
-            <div class="field">
-                <input class="input_date" type="date" placeholder="Date" value = {{today}} required> 
-                <input class="input_bpm" id ="input_bpm" type="number" placeholder="BPM" inputmode="decimal" required>
-                <input type="hidden" name="task_id" value="{{task.id}}">
-                <button class="fa-solid fa-plus btn_header_add" type="submit"></button>
-            </div>
-            
-        </form>
-
-
-
-
-        <hr>
-        <img src= {{url_for('static', filename=url)}}  class="sessions_plot">
-        <hr>
-
-        <span class="session_list">
-            {% for session in session_list %}
-                <span class="task">
-                <a class="session_list_name">{{ session.date }}   |  ({{ session.bpm }} BPM)</a>
-                <form  style='display: inline;'class="ui form" action="/deletesession" method="post">
-                    <span class="field">
-                        <input type="hidden" name="task_id" value="{{task.id}}">
-                        <input type="hidden" name="session_id" value="{{session.id}}">
-                        <button class="fa-solid fa-trash fa-2xs btn_item_delete" type="submit"></button>
-                    </span>
-                </form>
-            {% endfor %}
-                </span>
-        </span>
-        
+    <div>
+        <input id="my_bpm_input_field" type="number" onchange="change_bpm_field()"  min="40" max="300" step="1" value="120" />
+        <input id="my_bpm_input_range" type="range" onchange="change_bpm_range()" min="40" max="300" step="1" value="120" />
+        <button class="plus_minus" onclick="increment_bpm(1)">+</button>
+        <button class="plus_minus" onclick="increment_bpm(-1)">-</button>
     </div>
 
 
+    <div>
+        <canvas id="myChart"></canvas>
+      </div>
+      
+      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+      
+      <script>
+        const ctx = document.getElementById('myChart');
+      
+        new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+            datasets: [{
+              label: '# of Votes',
+              data: [12, 19, 3, 5, 2, 3],
+              borderWidth: 1
+            }]
+          },
+          options: {
+            scales: {
+              y: {
+                beginAtZero: true
+              }
+            }
+          }
+        });
+      </script>
+      
 
-    
-    
+
 </body>
 
 </html>

@@ -1,5 +1,6 @@
 body {
     background-color: lightgrey;
+    font-size: 0.8em;
     text-align: center;
     font-family: Helvetica, sans-serif, Arial;
     margin: 0%;
@@ -28,7 +29,7 @@ body {
 input{
     width: 300px;
     height: 30px;
-    margin: 10px;
+    margin: 2px;
     border: none;
     border-radius: 3px;
     text-align: center;
@@ -129,9 +130,9 @@ input:focus{
 }
 
 .btn_header_add {
-    width: 60px;
-    height: 45px;
-    margin: 8px;
+    width: 50px;
+    height: 40px;
+    margin: 2px;
     border: none;
     border-radius: 5px;
     text-align: center;
@@ -140,15 +141,7 @@ input:focus{
     background-color: green;
 }
 
-
-
-#greet {
-    background-color: palevioletred;
-    color: white;
-    width: 100px;
-}
-
-#greet:hover{
-    background-color: mediumvioletred;
-    cursor: pointer;
+.sessions_plot {
+    width: 100vw;
+    height: 50vw;
 }
