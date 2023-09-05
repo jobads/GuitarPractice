@@ -4,6 +4,7 @@ from . import db
 
 class tasks(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer)
     title = db.Column(db.String(100))
     target_bpm = db.Column(db.Integer)
     complete = db.Column(db.Boolean)
@@ -11,6 +12,7 @@ class tasks(db.Model):
 class sessions(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     task_id = db.Column(db.Integer)
+    user_id = db.Column(db.Integer)
     date = db.Column(db.Date)
     bpm = db.Column(db.Integer)
     duration = db.Column(db.Time)

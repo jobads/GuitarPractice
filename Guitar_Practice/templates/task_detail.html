@@ -2,13 +2,15 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Guitar Practice Tracker</title>
 
-    <link rel="stylesheet" href="{{ url_for('static',filename='css/main.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/Guitar_Practice.css')}}">
     <script src="https://kit.fontawesome.com/08ebfe01f5.js" crossorigin="anonymous"></script>
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css" />
     <script>
 
         "use strict"
@@ -165,7 +167,7 @@
 <body onload="my_onload()" onkeydown="handle_key(event)">
     <div style="margin-top: 50px;" class="ui container">
         <span class="app_header">Guitar Practice</span>
-        <a class="fa-solid fa-house fa-2xl btn_home" href="/tasks"></a>
+        <a class="fa-solid fa-house fa-2xl btn_home" href="/task_list"></a>
         <br>
         <span class="task_header"> Task: {{ task.title }} ({{ task.target_bpm }} BPM)</span>
         <br>

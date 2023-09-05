@@ -1,38 +1,73 @@
 <!-- templates/login.html -->
 
-{% extends "base.html" %}
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guitar Practice Tracker</title>
 
-{% block content %}
-<div class="column is-4 is-offset-4">
-    <h3 class="title">Login</h3>
-    <div class="box">
-        {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            <div class="notification is-danger">
-                {{ messages[0] }}
-            </div>
-        {% endif %}
-        {% endwith %}
-        <form method="POST" action="/login">
-            <div class="field">
-                <div class="control">
-                    <input class="input is-large" type="email" name="email" placeholder="Your Email" autofocus="">
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/Guitar_Practice.css')}}">
+    <script src="https://kit.fontawesome.com/08ebfe01f5.js" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css" />
+</head>
+
+<body>
+    <div class="section">
+        <div class="container">
+
+
+            <div class="columns is-8">
+                <div class="column is-4 is-offset-4">
+                    <div class="section">
+                        <h3 class="title has-text-centered is-size-4">Login to</h3>
+                        <h1 class="title has-text-centered is-size-3">Guitar Practice</h3>
+                    </div>
+
+                    {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                    <div class="notification is-danger">
+                        {{ messages[0] }}
+                    </div>
+                    {% endif %}
+                    {% endwith %}
+
+                    <form method="POST" action="/login">
+                        <div class="field" margin-left: 50%>
+                            <div class="control">
+                                <input class="input is-medium" type="email" name="email" placeholder="Your Email"
+                                    autofocus="">
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <div class="control">
+                                <input class="input is-medium" type="password" name="password"
+                                    placeholder="Your Password">
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="checkbox">
+                                <input type="checkbox">
+                                Remember me
+                            </label>
+                        </div>
+                        <div class="buttons">
+                            <button
+                                class="button is-block is-info is-large is-fullwidth has-background-success">Login</button>
+                        </div>
+                    </form>
+                    <form method="GET" action="/signup">
+
+                        <div class="buttons">
+                            <button class="button is-block is-info is-large is-fullwidth has-background-info">Sign
+                                Up</button>
+                        </div>
+                    </form>
+
                 </div>
             </div>
-
-            <div class="field">
-                <div class="control">
-                    <input class="input is-large" type="password" name="password" placeholder="Your Password">
-                </div>
-            </div>
-            <div class="field">
-                <label class="checkbox">
-                    <input type="checkbox">
-                    Remember me
-                </label>
-            </div>
-            <button class="button is-block is-info is-large is-fullwidth">Login</button>
-        </form>
+        </div>
     </div>
-</div>
-{% endblock %}
+
+</body>

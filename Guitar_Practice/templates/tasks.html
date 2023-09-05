@@ -2,53 +2,70 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Guitar Practice Tracker</title>
-
-    <link rel="stylesheet" href="{{ url_for('static',filename='css/main.css')}}">
     <script src="https://kit.fontawesome.com/08ebfe01f5.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css" />
 </head>
 
 <body>
-    <div style="margin-top: 50px;" class="ui container">
-        <span class="app_header">Guitar Practice</span>
-        <br>
+
+    <div class="section">
+        <nav class="navbar" role="navigation" aria-label="main navigation">
+            <div class="navbar-menu">
+                <div class="navbar-start">
+                    <a class="navbar-item">
+                        Guitar Practice
+                    </a>
+                </div>
+
+                <div class="navbar-end">
+                    <div class="navbar-item">
+                        <div class="buttons">
+                            <a class="button is-light" href="/logout">
+                                Log Out
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
 
         <form class="ui form" action="/logout" method="get">
-            <button class="fa-solid fa-arrow-right-from-bracket btn_logout" type="submit" ></button>
+            <button class="fa-solid fa-arrow-right-from-bracket btn_logout" type="submit"></button>
         </form>
 
         <form class="ui form" action="/add" method="post">
             <div class="field">
                 <input class="input_taskname" type="text" name="title" placeholder="Enter Practice Task..." required>
-                <input class="input_targetbpm"type="number" inputmode="decimal" name="target_bpm" placeholder="BPM" required>
+                <input class="input_targetbpm" type="number" inputmode="decimal" name="target_bpm" placeholder="BPM"
+                    required>
                 <button class="fa-solid fa-plus btn_header_add" type="submit"></button>
             </div>
-            
+
         </form>
 
         <hr>
 
- 
-        
         <span class="task_list">
             {% for task in task_list %}
-                <a class="task"> {{task.last_session_date}} <a/>
+            <a class="task"> {{task.last_session_date}} <a />
                 <a class="task_list_name" href="/task/{{ task.id }}">{{ task.title }}</a>
                 <span class="meter_label">{{ task.bpm }} </span>
-                <meter id="progressbar" value="{{task.bpm}}" min="0" max= "{{task.target_bpm}}"></meter>
+                <meter id="progressbar" value="{{task.bpm}}" min="0" max="{{task.target_bpm}}"></meter>
                 <span class="meter_label">{{ task.target_bpm }} </span>
-                <form  style='display: inline;'class="ui form" action="/delete" method="post">
+                <form style='display: inline;' class="ui form" action="/delete" method="post">
                     <span class="field">
                         <input type="hidden" name="task_id" value="{{task.id}}">
                         <button class="fa-solid fa-trash fa-2xs btn_item_delete" type="submit"></button>
                     </span>
                 </form>
                 <br>
-            {% endfor %}
+                {% endfor %}
         </span>
-        
+
     </div>
 </body>
 

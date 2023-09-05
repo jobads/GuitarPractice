@@ -14,7 +14,6 @@ main = Blueprint('main', __name__)
 @main.route('/')
 def index():
     return redirect(url_for("auth.login"))
-#    return render_template('index.html')
 
 @main.route('/profile')
 @login_required
@@ -24,10 +23,11 @@ def profile():
 
 @main.get("/task_list")
 def task_list():
-
-    max_bpms = db.session.query(sessions.task_id, func.max(sessions.bpm).label("bpm")).group_by(sessions.task_id).subquery()
-    last_session = db.session.query(sessions.task_id, func.max(sessions.date).label("last_session_date")).group_by(sessions.task_id).subquery()
+    user_id = current_user.get_id()
+    max_bpms = db.session.query(sessions.task_id, func.max(sessions.bpm).label("bpm")).filter(sessions.user_id == user_id).group_by(sessions.task_id).subquery()
+    last_session = db.session.query(sessions.task_id, func.max(sessions.date).label("last_session_date")).filter(sessions.user_id == user_id).group_by(sessions.task_id).subquery()
     task_list = db.session.query(tasks.id, tasks.title, tasks.target_bpm, tasks.complete) \
+            .filter(tasks.user_id == user_id) \
             .outerjoin(max_bpms, tasks.id == max_bpms.c.task_id) \
             .outerjoin(last_session, tasks.id == last_session.c.task_id) \
             .add_entity(max_bpms.c.bpm) \
@@ -41,7 +41,8 @@ def task_list():
 def add():
     title = request.form.get("title")
     target_bpm = request.form.get("target_bpm")
-    new_task = tasks(title=title, target_bpm = target_bpm, complete=False)
+    user_id = current_user.get_id()
+    new_task = tasks(title=title, target_bpm = target_bpm, complete=False, user_id = user_id)
     db.session.add(new_task)
     db.session.commit()
     return redirect(url_for("main.task_list"))
@@ -66,7 +67,8 @@ def addsession():
     task_id = int(request.form.get("task_id"))
     date = datetime.strptime(request.form.get("date"), "%Y-%m-%d")
     bpm = int(request.form.get("bpm"))
-    new_session = sessions(task_id=task_id, bpm=bpm, date=date)
+    user_id = current_user.get_id()
+    new_session = sessions(task_id=task_id, bpm=bpm, date=date, user_id=user_id)
     db.session.add(new_session)
     db.session.commit()
     return redirect(url_for("main.task_detail", task_id=task_id))
@@ -80,9 +82,6 @@ def deletesession():
     session = db.session.query(sessions).filter(sessions.id == session_id).first()
     db.session.delete(session)
     db.session.commit()
-    session_list = db.session.query(sessions).filter(sessions.task_id == task_id).all()
-    task = db.session.query(tasks).filter(tasks.id == task_id).first()
-    last_session = db.session.query(sessions).filter(sessions.task_id == task_id).order_by(desc(sessions.bpm)).first()
 
     today = datetime.today().strftime("%Y-%m-%d")
     #return render_template("task_detail.html", task=task, session_list = session_list, today = today, last_session = last_session)
@@ -92,10 +91,11 @@ def deletesession():
 @main.get("/task/<int:task_id>")
 def task_detail(task_id):
     # todo = Todo.query.filter_by(id=todo_id).first()
-    session_list = db.session.query(sessions).filter(sessions.task_id == task_id).order_by(desc(sessions.date)).all()
-    task = db.session.query(tasks).filter(tasks.id == task_id).first()
-    last_session = db.session.query(sessions).filter(sessions.task_id == task_id).order_by(desc(sessions.date)).first()
-
+    user_id = current_user.get_id()
+    session_list = db.session.query(sessions).filter(sessions.task_id == task_id).filter(sessions.user_id == user_id).order_by(desc(sessions.date)).all()
+    task = db.session.query(tasks).filter(tasks.id == task_id).filter(tasks.user_id == user_id).first()
+    last_session = db.session.query(sessions).filter(sessions.task_id == task_id).filter(sessions.user_id == user_id).order_by(desc(sessions.date)).first()
+    print(last_session)
     today = datetime.today().strftime("%Y-%m-%d")
 
     try:
