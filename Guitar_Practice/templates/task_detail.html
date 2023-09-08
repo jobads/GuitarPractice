@@ -6,11 +6,10 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Guitar Practice Tracker</title>
-
-    <link rel="stylesheet" href="{{ url_for('static',filename='css/Guitar_Practice.css')}}">
     <script src="https://kit.fontawesome.com/08ebfe01f5.js" crossorigin="anonymous"></script>
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css" />
+    <link rel="stylesheet" href="../static/css/main.css" />
+
     <script>
 
         "use strict"
@@ -38,7 +37,11 @@
 
         var running = false
 
+
+
+
         function my_onload() {
+
             my_play_button = document.getElementById("my_play_button")
             my_bpm_input_field = document.getElementById("my_bpm_input_field")
             my_bpm_input_range = document.getElementById("my_bpm_input_range")
@@ -136,13 +139,13 @@
 
         function change_bpm_field() {
             document.getElementById("my_bpm_input_range").value = document.getElementById("my_bpm_input_field").value;
-            document.getElementById("input_bpm").value  = document.getElementById("my_bpm_input_field").value;
+            document.getElementById("input_bpm").value = document.getElementById("my_bpm_input_field").value;
             stop_start()
         }
 
         function change_bpm_range() {
             document.getElementById("my_bpm_input_field").value = document.getElementById("my_bpm_input_range").value;
-            document.getElementById("input_bpm").value  = document.getElementById("my_bpm_input_range").value;
+            document.getElementById("input_bpm").value = document.getElementById("my_bpm_input_range").value;
             stop_start()
         }
 
@@ -164,68 +167,121 @@
     </script>
 </head>
 
-<body onload="my_onload()" onkeydown="handle_key(event)">
-    <div style="margin-top: 50px;" class="ui container">
-        <span class="app_header">Guitar Practice</span>
-        <a class="fa-solid fa-house fa-2xl btn_home" href="/task_list"></a>
-        <br>
-        <span class="task_header"> Task: {{ task.title }} ({{ task.target_bpm }} BPM)</span>
+<body onload="my_onload()" onkeydown="handle_key(event)" style="margin:5px;">
+
+    <div class="columns is-mobile is-vcentered" style="width: 100%; overflow-x: hidden;margin-top: 10px;">
+        <div class="column is-one-half has-text-left">
+            <form class="buttons" action="/task_list" method="get">
+                <button class="text is-size-4 has-text-weight-semibold"
+                    style="border: none; background: none; color: black; margin: 0;position: relative; bottom: 5px;">GuitarPractice</button>
+            </form>
+        </div>
+        <div class="column is-one-half is-right">
+            <form class="buttons is-right" action="/logout" method="get">
+                <button class="button is-block is-light is-normal ">Logout</button>
+            </form>
+        </div>
+    </div>
+
+
+
+    <div style="margin-top: 20px;" class="ui container">
+
+        <div class="text is-size-5 has-text-centered"> {{ task.title }} ({{ task.target_bpm }} BPM)</div>
         <br>
 
-        <div >
-            <div><button onclick="play_or_stop()" id="my_play_button">Start</button></div>
-
-            <div>
-                <input id="my_bpm_input_field" type="number" inputmode="decimal" onchange="change_bpm_field()"  min="40" max="240" step="1" value="{{last_session.bpm}}" />
-                <input id="my_bpm_input_range" type="range" onchange="change_bpm_range()" min="40" max="240" step="1" value="{{last_session.bpm}}" />
-                <button class="plus_minus" onclick="increment_bpm(1)">+</button>
-                <button class="plus_minus" onclick="increment_bpm(-1)">-</button>
+        <div class="columns is-mobile is-vcentered is-gapless is-centered" style="width: 100%; overflow-x: hidden;">
+            <div class="column is-narrow" style="margin: 5px;">
+                <button onclick="play_or_stop()" id="my_play_button" class="button is-light is-small ">Start</button>
             </div>
-            
-        
+            <div class="column is-narrow" style="margin: 5px;">
+                <div class="control">
+                    <input class="input is-small" id="my_bpm_input_field" type="number" inputmode="decimal"
+                        onchange="change_bpm_field()" style="width: 3em;" min="40" max="200" step="1"
+                        value="{{last_session.bpm}}" />
+                </div>
+            </div>
+            <div class="column is-narrow" style="margin: 5px;">
+                <input id="my_bpm_input_range" type="range" onchange="change_bpm_range()" min="40" max="200" step="1"
+                    value="{{last_session.bpm}}" style="width: 40vw;" />
+            </div>
+            <div class="column is-narrow" style="margin: 5px;">
+                <div class="buttons">
+                    <button class="button is-info is-small fa-solid fa-minus" onclick="increment_bpm(-1)"
+                        style="width: 3em;"></button>
+                    <button class="button is-info is-small fa-solid fa-plus" onclick="increment_bpm(1)"
+                        style="width: 3em;"></button>
+                </div>
+            </div>
         </div>
 
 
 
-
-        <form class="ui form" action="/addsession" method="post">
-            <div class="field">
-                <input class="input_date" name="date" type="date"  placeholder="Date" value = {{today}} required> 
-                <input class="input_bpm" id ="input_bpm" name="bpm" type="number" placeholder="BPM" inputmode="decimal" required>
-                <input type="hidden" name="task_id" value="{{task.id}}">
-                <button class="fa-solid fa-plus btn_header_add" type="submit"></button>
+        <form class="columns is-mobile is-vcentered is-gapless is-centered" action="/addsession" method="post">
+            <div class="column is-narrow" style="margin: 5px;">
+                <input class="input is-normal" name="date" type="date" placeholder="Date" value={{today}}
+                    style="width: 10em;" required>
             </div>
-            
+            <div class="column is-narrow" style="margin: 5px;">
+                <input class="input is-normal" id="input_bpm" name="bpm" type="number" placeholder="BPM"
+                    inputmode="decimal" style="width: 4em;" required>
+            </div>
+            <div class="column is-narrow" style="margin: 5px;">
+                <input type="hidden" name="task_id" value="{{task.id}}">
+                <button class="button is-normal is-success fa-solid fa-plus" type="submit"></button>
+            </div>
         </form>
 
 
 
 
         <hr>
-        <img src= {{url_for('static', filename=url)}}  class="sessions_plot">
+        <img src={{url_for('static', filename=url)}} class="sessions_plot">
         <hr>
 
-        <span class="session_list">
-            {% for session in session_list %}
-                <span class="task">
-                <a class="session_list_name">{{ session.date }}   |  ({{ session.bpm }} BPM)</a>
-                <form  style='display: inline;'class="ui form" action="/deletesession" method="post">
-                    <span class="field">
-                        <input type="hidden" name="task_id" value="{{task.id}}">
-                        <input type="hidden" name="session_id" value="{{session.id}}">
-                        <button class="fa-solid fa-trash fa-2xs btn_item_delete" type="submit"></button>
-                    </span>
-                </form>
-            {% endfor %}
-                </span>
-        </span>
-        
+
+
+
+        <table class="table is-hoverable is-fullwidth is-size-7">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>BPM</th>
+                    <th></th>
+
+                </tr>
+            </thead>
+            <tbody>
+                {% for session in session_list %}
+                <tr style="border-bottom-style: hidden; line-height:10px;">
+                    <td style="width: 30vw;vertical-align: middle">{{ session.date }}</td>
+                    <td style="width: 75vw;vertical-align: middle"><span class="task_list_name"
+                            style="width: 6em; display:inline-block;">({{ session.bpm }} BPM)</span>
+                        <meter id="progressbar" value="{{session.bpm}}" min="0" max="{{task.target_bpm}}"
+                            style="width: 30vw;"></meter>
+                    </td>
+                    <td>
+                        <form style='display: inline;vertical-align: middle' class="ui form" action="/deletesession"
+                            method="post"> <span class="field">
+                                <input type="hidden" name="task_id" value="{{task.id}}">
+                                <input type="hidden" name="session_id" value="{{session.id}}">
+                                <button
+                                    class="button is-danger is-small has-background-success fa-solid fa-trash is-centered"
+                                    type="submit" style="margin:auto; display:inline-block;scale: 90%;"></button>
+                            </span></form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+
     </div>
 
 
 
-    
-    
+
+
 </body>
 
 </html>
