@@ -92,42 +92,14 @@ def deletesession():
 def task_detail(task_id):
     # todo = Todo.query.filter_by(id=todo_id).first()
     user_id = current_user.get_id()
-    session_list = db.session.query(sessions).filter(sessions.task_id == task_id).filter(sessions.user_id == user_id).order_by(desc(sessions.date)).all()
+    session_list = db.session.query(sessions).filter(sessions.task_id == task_id).filter(sessions.user_id == user_id).order_by(sessions.date).all()
     task = db.session.query(tasks).filter(tasks.id == task_id).filter(tasks.user_id == user_id).first()
     last_session = db.session.query(sessions).filter(sessions.task_id == task_id).filter(sessions.user_id == user_id).order_by(desc(sessions.date)).first()
     print(last_session)
     today = datetime.today().strftime("%Y-%m-%d")
 
-    try:
-        lst_bpm = [r.bpm for r in session_list]
-        lst_date = [r.date for r in session_list]
 
-        fig = Figure(figsize=(6,3), dpi = 200)
-        fig
-        axis = fig.add_subplot(1, 1, 1)
-        xs = lst_date
-        ys = lst_bpm
-        axis.plot(xs, ys)
-        locator = mdates.AutoDateLocator()
-        formatter = mdates.AutoDateFormatter(locator)
+    data = [[[session.date.year, session.date.month,session.date.day], session.bpm] for session in session_list]
 
-        axis.xaxis.set_major_locator(locator)
-        axis.xaxis.set_major_formatter(formatter)
-        fig.autofmt_xdate(rotation=45)
+    return render_template("task_detail.html", task=task, session_list = session_list, today = today, last_session = last_session, data=data)
 
-        #axis.set_xticklabels(axis.get_xticks(), rotation = 45)
-        axis.hlines(y = task.target_bpm, xmin = min(lst_date), xmax=max(lst_date), color = "green")
-        axis.set_ylim(bottom=0, top= task.target_bpm * 1.2)
-        fig.tight_layout()
-        print("file wll be saved now")
-        #fig.savefig("/home/moritzinho/mysite/static/session_plot.png", transparent=True)
-        fig.savefig("Guitar_Practice/static/session_plot.png", transparent=True)
-        print("file saved")
-
-
-        return render_template("task_detail.html", task=task, session_list = session_list, today = today, last_session = last_session, url = "session_plot.png")
-        #return render_template("task_detail.html", task=task, session_list = session_list, today = today, last_session = last_session, url = "/static/session_plot.png")
-    except Exception as e: 
-        print(e)
-        return render_template("task_detail.html", task=task, session_list = session_list, today = today, last_session = last_session, url = "empty.png")
-        return render_template("task_detail.html", task=task, session_list = session_list, today = today, last_session = last_session, url = "/static/empty.png")

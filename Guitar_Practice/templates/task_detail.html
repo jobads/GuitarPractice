@@ -8,6 +8,7 @@
     <title>Guitar Practice Tracker</title>
     <script src="https://kit.fontawesome.com/08ebfe01f5.js" crossorigin="anonymous"></script>
 
+
     <link rel="stylesheet" href="../static/css/main.css" />
 
     <script>
@@ -167,83 +168,124 @@
     </script>
 </head>
 
-<body onload="my_onload()" onkeydown="handle_key(event)" style="margin:5px;">
+<body onload="my_onload()" onkeydown="handle_key(event)" style="background-color: rgb(245, 245, 245);">
 
-    <div class="columns is-mobile is-vcentered" style="width: 100%; overflow-x: hidden;margin-top: 10px;">
-        <div class="column is-one-half has-text-left">
+    <div class="columns is-mobile is-vcentered" style=" overflow-x: hidden;padding-top: 1em; background-color: white; padding-bottom: 3em;">
+        <div class="column is-one-quarter has-text-left">
             <form class="buttons" action="/task_list" method="get">
-                <button class="text is-size-4 has-text-weight-semibold"
-                    style="border: none; background: none; color: black; margin: 0;position: relative; bottom: 5px;">GuitarPractice</button>
+                <button class="button is-normal fa-solid fa-chevron-left is-centered"
+                    style="border: none; background: none; color: black; margin: 0;position: relative; bottom: 5px;"
+                    </button>
             </form>
         </div>
-        <div class="column is-one-half is-right">
-            <form class="buttons is-right" action="/logout" method="get">
+        <div class="column is-one-half is-vcentered">
+            <div class="text is-size-5 has-text-centered has-text-weight-semibold"> {{ task.title }} ({{ task.target_bpm }} BPM)</div>
+        </div>
+
+
+        <div class="column is-one-quarter is-right">
+            <!---<form class="buttons is-right" action="/logout" method="get">
                 <button class="button is-block is-light is-normal ">Logout</button>
-            </form>
+            </form>--->
         </div>
     </div>
 
+  
 
-
-    <div style="margin-top: 20px;" class="ui container">
-
-        <div class="text is-size-5 has-text-centered"> {{ task.title }} ({{ task.target_bpm }} BPM)</div>
-        <br>
-
-        <div class="columns is-mobile is-vcentered is-gapless is-centered" style="width: 100%; overflow-x: hidden;">
+    <div>
+        <form class="columns is-mobile is-vcentered is-gapless is-centered" action="/addsession" method="post" style="margin-left: 3vw;
+        margin-right: 3vw; 
+        margin-top: -3em;
+        margin-bottom: 0.5em;
+        background-color: white; 
+        padding: 0.8em;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)">
             <div class="column is-narrow" style="margin: 5px;">
-                <button onclick="play_or_stop()" id="my_play_button" class="button is-light is-small ">Start</button>
+                <input class="input is-small is-rounded" name="date" type="date" placeholder="Date" value={{today}}
+                    style="width: 10em; position: relative; z-index: 1;" required>
             </div>
             <div class="column is-narrow" style="margin: 5px;">
-                <div class="control">
-                    <input class="input is-small" id="my_bpm_input_field" type="number" inputmode="decimal"
-                        onchange="change_bpm_field()" style="width: 3em;" min="40" max="200" step="1"
-                        value="{{last_session.bpm}}" />
-                </div>
+                <input class="input is-small is-rounded" id="input_bpm" name="bpm" type="number" placeholder="BPM"
+                    inputmode="decimal" style="width: 8em; position: relative; right: 40px; padding-left: 40px;" required>
             </div>
-            <div class="column is-narrow" style="margin: 5px;">
-                <input id="my_bpm_input_range" type="range" onchange="change_bpm_range()" min="40" max="200" step="1"
-                    value="{{last_session.bpm}}" style="width: 40vw;" />
-            </div>
-            <div class="column is-narrow" style="margin: 5px;">
-                <div class="buttons">
-                    <button class="button is-info is-small fa-solid fa-minus" onclick="increment_bpm(-1)"
-                        style="width: 3em;"></button>
-                    <button class="button is-info is-small fa-solid fa-plus" onclick="increment_bpm(1)"
-                        style="width: 3em;"></button>
-                </div>
-            </div>
-        </div>
-
-
-
-        <form class="columns is-mobile is-vcentered is-gapless is-centered" action="/addsession" method="post">
-            <div class="column is-narrow" style="margin: 5px;">
-                <input class="input is-normal" name="date" type="date" placeholder="Date" value={{today}}
-                    style="width: 10em;" required>
-            </div>
-            <div class="column is-narrow" style="margin: 5px;">
-                <input class="input is-normal" id="input_bpm" name="bpm" type="number" placeholder="BPM"
-                    inputmode="decimal" style="width: 4em;" required>
-            </div>
-            <div class="column is-narrow" style="margin: 5px;">
+            <div class="column is-narrow" style="margin: 0px;">
                 <input type="hidden" name="task_id" value="{{task.id}}">
-                <button class="button is-normal is-success fa-solid fa-plus" type="submit"></button>
+                <button class="button is-small is-success fa-solid fa-plus is-rounded" type="submit" style="position: relative; right: 25px; width: 4em;"></button>
             </div>
         </form>
+    </div>
+
+    <div>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.5.1/chart.js"></script>
+        <script
+            src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+        <div style="height: 30vh; margin-left: 5vw; margin-right: 5vw; background-color: white;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)">
+            <canvas id="chartJSContainer" style="width: 100%;"></canvas>
+        </div>
+        <script>        
+            var options = {
+                type: 'line',
+                data: {
+                    datasets: [
+                        {
+                            borderColor: 'blue',
+                            data: [
+                            {% for item in data %}
+                                { x: new Date({{item[0][0]}}, {{item[0][1]}}, {{item[0][2]}}), y: {{item[1]}} },
+                            {% endfor %}
+                            ]
+                        },
+                        {
+                            borderColor: 'green',
+                            borderDash: [10,5],
+                            data: [
+                            {% for item in data %}
+                                { x: new Date({{item[0][0]}}, {{item[0][1]}}, {{item[0][2]}}), y: {{ task.target_bpm }} },
+                            {% endfor %}
+                            ]
+                        }                
+                ]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    scales: {
+                        xAxes: {
+                            type: 'time',
+                            time: {
+                    unit: 'day',          
+                    displayFormats: {
+                        day: 'dd MMM yy' 
+                    }  
+                            }
+                        },
+                        yAxes: {
+                            min: 0,
+                            suggestedMax: {{ task.target_bpm }} * 1.05              
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false,          
+                        }
+                    }
+                }
+            }
+            var ctx = document.getElementById('chartJSContainer').getContext('2d');
+            new Chart(ctx, options);
+        </script>
+    </div>
 
 
-
-
-        <hr>
-        <img src={{url_for('static', filename=url)}} class="sessions_plot">
-        <hr>
-
-
-
-
+    <div style="overflow-y:scroll;
+    height:40vh;
+    margin: 0.6em;
+    display:block;">
         <table class="table is-hoverable is-fullwidth is-size-7">
-            <thead>
+            <thead style="top: 0;
+            z-index: 2;
+            position: sticky;
+            background-color: white;">
                 <tr>
                     <th>Date</th>
                     <th>BPM</th>
@@ -276,6 +318,41 @@
         </table>
 
 
+    </div>
+
+    <div>
+        <div class="columns is-mobile is-vcentered is-gapless is-centered" style="
+        margin-left: 7vw; 
+        margin-right: 7vw;
+        background-color: white; 
+        padding: 0.8em;
+        position: relative;
+        bottom: 1em;
+        width: 10;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)" class="ui container">
+            <div class="column is-narrow" style="margin: 5px;">
+                <button onclick="play_or_stop()" id="my_play_button" class="button is-light is-small ">Start</button>
+            </div>
+            <div class="column is-narrow" style="margin: 5px;">
+                <div class="control">
+                    <input class="input is-small" id="my_bpm_input_field" type="number" inputmode="decimal"
+                        onchange="change_bpm_field()" style="width: 3em;" min="40" max="200" step="1"
+                        value="{{last_session.bpm}}" />
+                </div>
+            </div>
+            <div class="column is-narrow" style="margin: 5px;">
+                <input id="my_bpm_input_range" type="range" onchange="change_bpm_range()" min="40" max="200" step="1"
+                    value="{{last_session.bpm}}" style="width: 20vw;" />
+            </div>
+            <div class="column is-narrow" style="margin: 5px;">
+                <div class="buttons">
+                    <button class="button is-info is-small fa-solid fa-minus" onclick="increment_bpm(-1)"
+                        style="width: 3em;"></button>
+                    <button class="button is-info is-small fa-solid fa-plus" onclick="increment_bpm(1)"
+                        style="width: 3em;"></button>
+                </div>
+            </div>
+        </div>
     </div>
 
 

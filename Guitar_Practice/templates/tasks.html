@@ -26,9 +26,7 @@
     </div>
 
 
-    <!---<form class="ui form" action="/logout" method="get">
-            <button class="fa-solid fa-arrow-right-from-bracket btn_logout" type="submit"></button>
-        </form>--->
+    <hr>
 
 
 
@@ -69,8 +67,8 @@
         <tbody>
             {% for task in task_list %}
             <tr style="border-bottom-style: hidden; line-height:10px;">
-                <td style="width: 25vw;">{{task.last_session_date}}</td>
-                <td style="width: 75vw;"><a class="task_list_name" href="/task/{{ task.id }}">{{ task.title }}</a></td>
+                <td style="width: 35vw;">{{task.last_session_date}}</td>
+                <td style="width: 65vw;"><a class="task_list_name" href="/task/{{ task.id }}">{{ task.title }}</a></td>
                 <td rowspan="2" style="vertical-align : middle;text-align:right;">
                     <form style='display: inline;' class="ui form" action="/delete" method="post">
                         <span class="field">
