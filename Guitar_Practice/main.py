@@ -92,7 +92,7 @@ def deletesession():
 def task_detail(task_id):
     # todo = Todo.query.filter_by(id=todo_id).first()
     user_id = current_user.get_id()
-    session_list = db.session.query(sessions).filter(sessions.task_id == task_id).filter(sessions.user_id == user_id).order_by(sessions.date).all()
+    session_list = db.session.query(sessions).filter(sessions.task_id == task_id).filter(sessions.user_id == user_id).order_by(desc(sessions.date)).all()
     task = db.session.query(tasks).filter(tasks.id == task_id).filter(tasks.user_id == user_id).first()
     last_session = db.session.query(sessions).filter(sessions.task_id == task_id).filter(sessions.user_id == user_id).order_by(desc(sessions.date)).first()
     print(last_session)

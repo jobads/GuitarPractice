@@ -4,95 +4,101 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
     <title>Guitar Practice Tracker</title>
     <script src="https://kit.fontawesome.com/08ebfe01f5.js" crossorigin="anonymous"></script>
 
     <link rel="stylesheet" href="../static/css/main.css" />
+    <script>document.ondblclick = function(e) {
+        e.preventDefault();
+    }</script>
 </head>
 
-<body style="margin:5px;">
+<body style="height: 100%;
+display: flex;
+flex-direction: column;
+margin: 0;">
+
+    <div class="r_flex_container" style="display:flex;
+    flex-flow: column nowrap;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    margin: 0;">
 
 
-    <div class="columns is-mobile is-vcentered" style="width: 100%; overflow-x: hidden;margin-top: 10px;">
-        <div class="column is-one-half has-text-left" style="position: relative; left: 24px;">
-            <p class="text is-size-4 has-text-weight-semibold">GuitarPractice</p>
-        </div>
-        <div class="column is-one-half is-right">
-            <form class="buttons is-right" action="/logout" method="get">
-                <button class="button is-block is-light is-normal ">Logout</button>
-            </form>
-        </div>
-    </div>
-
-
-    <hr>
-
-
-
-
-    <form method="POST" action="/add">
-
-        <div class="field-box" style="display:flex; width: 100%;">
-
-
-            <div class="field" style="width: 15em; margin-right: 10px; margin-left: 10px;">
-                <input class="input is-normal" type="text" name="title" placeholder="Enter Practice Task...">
-            </div>
-            <div class="field" style="width: 20vw; margin-right: 10px">
-                <input class="input is-normal" type="number" inputmode="decimal" name="target_bpm" placeholder="BPM"
-                    required>
-            </div>
-            <div class="field" style="margin-right: 10px">
-                <button class="button is-info is-normal has-background-success fa-solid fa-plus" type="submit"></button>
-            </div>
-
-        </div>
-
-
-    </form>
-
-
-    <hr>
-
-    <table class="table is-hoverable is-fullwidth is-size-7">
-        <thead>
-            <tr>
-                <th>Last Date</th>
-                <th>Task Title</th>
-                <th></th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for task in task_list %}
-            <tr style="border-bottom-style: hidden; line-height:10px;">
-                <td style="width: 35vw;">{{task.last_session_date}}</td>
-                <td style="width: 65vw;"><a class="task_list_name" href="/task/{{ task.id }}">{{ task.title }}</a></td>
-                <td rowspan="2" style="vertical-align : middle;text-align:right;">
-                    <form style='display: inline;' class="ui form" action="/delete" method="post">
-                        <span class="field">
-                            <input type="hidden" name="task_id" value="{{task.id}}">
-                            <button
-                                class="button is-danger is-small has-background-success fa-solid fa-trash is-centered"
-                                type="submit" style="margin:auto; display:inline-block;"></button>
-                        </span>
+        <div class="r_flex_fixed_child">
+            <div class="columns is-mobile is-vcentered" style="width: 100%; overflow-x: hidden;margin-top: 10px;">
+                <div class="column is-one-half has-text-left" style="position: relative; left: 24px;">
+                    <p class="text is-size-4 has-text-weight-semibold">GuitarPractice</p>
+                </div>
+                <div class="column is-one-half is-right">
+                    <form class="buttons is-right" action="/logout" method="get">
+                        <button class="button is-block is-light is-normal ">Logout</button>
                     </form>
-                </td>
-            </tr>
-            <tr style="line-height:5px;">
-                <td colspan="2"><span class="meter_label" style="width: 10vw; display: inline-block;">{{ task.bpm }} </span>
-                    <meter id="progressbar" value="{{task.bpm}}" min="0" max="{{task.target_bpm}}" style="width: 40vw;"></meter>
-                    <span class="meter_label">{{ task.target_bpm }} </span>
-                </td>
-                
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+                </div>
+            </div>
+        
+        
+            <hr>
+            <form method="POST" action="/add" style="margin-top: -0.7em; margin-bottom: -1.2em;">
+                <div class="field-box" style="display:flex; width: 100%;">
+                    <div class="field" style="width: 15em; margin-right: 10px; margin-left: 10px;">
+                        <input class="input is-normal" type="text" name="title" placeholder="Enter Practice Task...">
+                    </div>
+                    <div class="field" style="width: 20vw; margin-right: 10px">
+                        <input class="input is-normal" type="number" inputmode="decimal" name="target_bpm" placeholder="BPM"
+                            required>
+                    </div>
+                    <div class="field" style="margin-right: 10px">
+                        <button class="button is-info is-normal has-background-success fa-solid fa-plus" type="submit"></button>
+                    </div>
+                </div>
+            </form>
+            <hr>
+        </div>
+        
+        <div class="r_flex_expand_child" style="flex:1;
+        overflow-y:auto;  margin: 0.3em; display: block; margin-bottom: 20px; margin-top: -1em;">
+            <table class="table is-hoverable is-fullwidth is-size-7">
+                <thead style="top: 0;
+                z-index: 2;
+                position: sticky;
+                background-color: white;">
+                    <tr>
+                        <th>Last Date</th>
+                        <th>Task Title</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for task in task_list %}
+                    <tr style="border-bottom-style: hidden; line-height:10px;">
+                        <td style="width: 35vw;">{{task.last_session_date}}</td>
+                        <td style="width: 65vw;"><a class="task_list_name" href="/task/{{ task.id }}" style="font-size: 14px;">{{ task.title }}</a></td>
+                        <td rowspan="2" style="vertical-align : middle;text-align:right;">
+                            <form style='display: inline;' class="ui form" action="/delete" method="post">
+                                <span class="field">
+                                    <input type="hidden" name="task_id" value="{{task.id}}">
+                                    <button
+                                        class="button is-danger is-small has-background-success fa-solid fa-trash is-centered"
+                                        type="submit" style="margin:auto; display:inline-block;"></button>
+                                </span>
+                            </form>
+                        </td>
+                    </tr>
+                    <tr style="line-height:5px;">
+                        <td colspan="2"><span class="meter_label" style="width: 10vw; display: inline-block;">{{ task.bpm }} </span>
+                            <meter id="progressbar" value="{{task.bpm}}" min="0" max="{{task.target_bpm}}" style="width: 40vw;"></meter>
+                            <span class="meter_label">{{ task.target_bpm }} </span>
+                        </td>
 
-    
-
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
 
     </div>
 </body>
