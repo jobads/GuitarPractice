@@ -7,6 +7,10 @@
     overflow-y: hidden;
 }
 
+.sidebar.isOpened {
+      transform: translateX(+280px);
+  }
+
 
 /*! bulma.io v0.7.2 | MIT License | github.com/jgthms/bulma */
 @-webkit-keyframes spinAround {

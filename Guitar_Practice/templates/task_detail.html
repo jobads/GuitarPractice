@@ -11,158 +11,33 @@
 
     <link rel="stylesheet" href="../static/css/main.css" />
 
+    <script src="../static/scripts/metronome.js"></script> 
+    <script src="../static/scripts/timer.js"></script>
+    <script src="../static/scripts/NoSleep.js"></script>
+
     <script>
-
-        "use strict"
-
-        var AudioContext = window.AudioContext || window.webkitAudioContext; // cross browser    
-        var audio_context
-        var oscillator
-        var gain
-
-        var my_play_button
-        var my_bpm_input_range
-        var my_volume_input = 5
-
-        var my_tap_results
-
-        var char_to_increment = {}
-
-        var prev_tap_time = 0
-        var number_of_taps = 0
-        var accumulated_tap_time = 0
-
-        var beats = "1"
-        var current_beat = 1
-
-        var running = false
-
-
-
-
-        function my_onload() {
-
-            my_play_button = document.getElementById("my_play_button")
-            my_bpm_input_range = document.getElementById("my_bpm_input_range")
-        }
-
-        function play_or_stop() {
-
-            // can't do this in onload because browser wants an explicit user gesture
-            if (audio_context == null) {
-                audio_context = new AudioContext()
-
-                // There's a "node graph"  oscillator->gain->destination
-                oscillator = audio_context.createOscillator()
-                oscillator.type = "sine"
-                oscillator.frequency.value = 1000
-                gain = audio_context.createGain()
-                gain.gain.value = 0
-                oscillator.connect(gain)
-                gain.connect(audio_context.destination)
-                oscillator.start()
-            }
-
-            if (my_play_button.innerText == "Start") {
-                play()
-                // toggle text
-                my_play_button.innerText = "Stop"
-                my_play_button.style.backgroundColor = "red"
+        function sidebar_hide_show() {
+            if (sidebar.classList.contains('isOpened')) {
+                sidebar.classList.remove('isOpened');
+                sidebarTrigger.classList.remove("fa-circle-chevron-left");
+                sidebarTrigger.classList.add("fa-circle-chevron-right");
             } else {
-                stop_playing()
-                // toggle text
-                my_play_button.innerText = "Start"
-                my_play_button.style.backgroundColor = "lightgreen"
-            }
+                sidebar.classList.add('isOpened');
+                sidebarTrigger.classList.remove("fa-circle-chevron-right");
+                sidebarTrigger.classList.add("fa-circle-chevron-left");
+            }        
         }
-
-        function stop_start() {
-            current_beat = 1
-            if (running) {
-                stop_playing()
-                play()
-            }
-        }
-
-        function play() {
-
-            running = true
-
-            var volume
-
-            var now = audio_context.currentTime
-
-            // schedule click 1 a little in the future so that click 2 doesn't come right after the late click 1
-            now += .5
-
-            // Schedule 15 minutes of iterations
-            // This seem to go bad if I schedule TOO many (race condition?)
-            // I couldn't figure out a way to do this where the metronome would never run out. 
-            var iterations = 15 * my_bpm_input_range.value
-
-            // how much time from one click to the next
-            var interval_in_seconds = 60.0 / my_bpm_input_range.value
-
-            for (var i = 0; i < iterations; i++) {
-                // calc how loud, calc if this beat should be the louder "accented" beat
-                volume = 0.5
-                schedule_one_click(now + (i * interval_in_seconds), volume)
-            }
-
-        }
-
-        function stop_playing() {
-            running = false
-            var time = audio_context.currentTime
-            gain.gain.cancelScheduledValues(time)
-            gain.gain.setValueAtTime(0, time)
-        }
-
-        function schedule_one_click(time, volume) {
-            gain.gain.cancelScheduledValues(time)
-            gain.gain.setValueAtTime(0, time)
-            gain.gain.linearRampToValueAtTime(volume, time + .001);
-            gain.gain.linearRampToValueAtTime(0, time + .001 + .01);
-        }
-
-
-
-        function change_frequency(el) {
-            oscillator.frequency.value = el.value
-            stop_start()
-        }
-
-        function change_bpm() {
-            stop_start()
-        }
-
-        function change_bpm_range() {
-            document.getElementById("input_bpm").value = document.getElementById("my_bpm_input_range").value;
-            stop_start()
-        }
-
-        function change_beats(el) {
-            beats = el.value
-            stop_start()
-        }
-
-        function increment_bpm(increment) {
-            // put focus back to play/stop otherwise spacebar affects last pressed button
-            //my_play_button.focus()
-            my_bpm_input_range.value = parseInt(my_bpm_input_range.value) + increment
-            change_bpm_range()
-            // so that the spacebar keeps working
-            my_play_button.focus()
-        }
-
-
     </script>
-    <script>document.ondblclick = function(e) {
-        e.preventDefault();
-    }</script>
+    <script>
+        document.ondblclick = function(e) {
+            e.preventDefault();
+        }
+    </script>
+
+
 </head>
 
-<body onload="my_onload()" onkeydown="handle_key(event)" style="background-color: rgb(245, 245, 245);height: 100%;
+<body onload="my_onload()" style="background-color: rgb(245, 245, 245);height: 100%;
 display: flex;
 flex-direction: column;
 margin: 0;
@@ -250,18 +125,14 @@ touch-action: none;">
                                         { x: new Date({{item[0][0]}}, {{item[0][1]}}, {{item[0][2]}}), y: {{item[1]}} },
                                     {% endfor %}
                                     ]
-                                },
-                                {
+                                },{
                                     borderColor: 'green',
                                     borderDash: [10,5],
                                     data: [
                                     {% for item in data %}
                                         { x: new Date({{item[0][0]}}, {{item[0][1]}}, {{item[0][2]}}), y: {{ task.target_bpm }} },
                                     {% endfor %}
-                                    ]
-                                }              
-                        ]
-                        },
+                                    ]}]},
                         options: {
                             maintainAspectRatio: false,
                             scales: {
@@ -271,21 +142,15 @@ touch-action: none;">
                             unit: 'day',          
                             displayFormats: {
                                 day: 'dd MMM' 
-                            }  
-                                    }
-                                },
+                            }}},
                                 yAxes: {
                                     
                                     suggestedMax: {{ task.target_bpm }} * 1.05              
-                                }
-                            },
+                                }},
                             plugins: {
                                 legend: {
                                     display: false,          
-                                }
-                            }
-                        }
-                    }
+                                }}}}
                     var ctx = document.getElementById('chartJSContainer').getContext('2d');
                     Chart.defaults.font.size = 8;
                     new Chart(ctx, options);
@@ -296,85 +161,105 @@ touch-action: none;">
 
         </div>
         <div class="r_flex_expand_child" style="flex:1;
-        overflow-y:auto;  margin: 1em; display: block; margin-bottom: 40px;">
-                        <table class="table is-hoverable is-fullwidth is-size-7" >
-                                        <thead style="top: 0;
-                                z-index: 2;
-                                position: sticky;
-                                background-color: white;
-                                font-size: 10px;
-                                ">
-                                            <tr>
-                                                <th>Date</th>
-                                                <th>BPM</th>
-                                                <th></th>
-                    
-                                            </tr>
-                                        </thead>
-                                        <tbody style="font-size: 10px;">
-                                            {% for session in session_list %}
-                                            <tr style="border-bottom-style: hidden; line-height:10px;">
-                                                <td style="width: 30vw;vertical-align: middle">{{ session.date }}</td>
-                                                <td style="width: 75vw;vertical-align: middle"><span class="task_list_name"
-                                                        style="width: 6em; display:inline-block;">{{ session.bpm }} BPM</span>
-                                                    <meter id="progressbar" value="{{session.bpm}}" min="0" max="{{task.target_bpm}}"
-                                                        style="width: 30vw;"></meter>
-                                                </td>
-                                                <td>
-                                                    <form style='display: inline;vertical-align: middle' class="ui form"
-                                                        action="/deletesession" method="post"> <span class="field">
-                                                            <input type="hidden" name="task_id" value="{{task.id}}">
-                                                            <input type="hidden" name="session_id" value="{{session.id}}">
-                                                            <button
-                                                                class="button is-danger is-small has-background-success fa-solid fa-trash is-centered"
-                                                                type="submit"
-                                                                style="margin:auto; display:inline-block;scale: 90%;"></button>
-                                                        </span></form>
-                                                </td>
-                                            </tr>
-                                            {% endfor %}
-                                        </tbody>
-                                    </table>
-                            
+        overflow-y:auto;  margin: 1em; display: block;">
+            <table class="table is-hoverable is-fullwidth is-size-7" >
+                <thead style="top: 0;
+                    z-index: 2;
+                    position: sticky;
+                    background-color: white;
+                    font-size: 10px;
+                    ">
+                    <tr>
+                        <th>Date</th>
+                        <th>BPM</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody style="font-size: 10px;">
+                    {% for session in session_list %}
+                    <tr style="border-bottom-style: hidden; line-height:10px;">
+                        <td style="width: 30vw;vertical-align: middle">{{ session.date }}</td>
+                        <td style="width: 75vw;vertical-align: middle"><span class="task_list_name"
+                                style="width: 6em; display:inline-block;">{{ session.bpm }} BPM</span>
+                            <meter id="progressbar" value="{{session.bpm}}" min="0" max="{{task.target_bpm}}"
+                                style="width: 30vw;"></meter>
+                        </td>
+                        <td>
+                            <form style='display: inline;vertical-align: middle' class="ui form"
+                                action="/deletesession" method="post"> 
+                                <span class="field">
+                                    <input type="hidden" name="task_id" value="{{task.id}}">
+                                    <input type="hidden" name="session_id" value="{{session.id}}">
+                                    <button
+                                        class="button is-danger is-small has-background-success fa-solid fa-trash is-centered"
+                                        type="submit"
+                                        style="margin:auto; display:inline-block;scale: 90%;">
+                                    </button>
+                                </span>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>               
         </div>
-        <div class="r_flex_fixed_child" style="
-        background-color:black;
-        color:white;">
-            
-            
-            <div class="columns is-mobile is-vcentered is-gapless is-centered is-multiline" style="
-            margin-left: 7vw; 
-            margin-right: 7vw;
-            background-color: white; 
-            position: absolute; 
-            bottom: 10px;
-            padding-left: 0.5em;
-            padding-right: 0.5em;
-            height: 40px;
-            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)" class="ui container">
-                    <div class="column is-narrow has-text-right" style="margin: 5px;">
-                        <button onclick="play_or_stop()" id="my_play_button"
-                            class="button is-light is-small is-rounded">Start</button>
-                    </div>
-                    <div class="column is-narrow has-text-right" style="margin: 5px;">
-                            <button class="button is-info is-small fa-solid fa-minus is-rounded" onclick="increment_bpm(-1)"
-                                style="width: 3em;"></button>
-                        </div> 
-                    <div class="column is-narrow" style="margin: 5px;">
-                        <input id="my_bpm_input_range" type="range" onchange="change_bpm_range()" min="40" max="200"
-                            step="1" value="{{last_session.bpm}}"  style="width: 30vw;"/>
-                    </div>
-                    <div class="column is-narrow has-text-left" style="margin: 5px;">
-                            <button class="button is-info is-small fa-solid fa-plus is-rounded" onclick="increment_bpm(1)" 
-                            style="width: 3em;"></button>
-                    </div>
-                </div>
 
 
 
+        <div id="sidebar" class="sidebar" style="position: relative; bottom: 100px;    
+        background-color: white;
+        z-index: 3;
+        position: absolute;
+        left: -280px; 
+        bottom: 20px;
+        height: 90px;
+        width: 330px;
+        margin-right: 2em;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        transition: transform 0.5s;">
+            <div style="margin: 2px;display: flex; align-items: center;">
+                    <button onclick="play_or_stop()" id="my_play_button"
+                        class="button is-light is-small is-rounded" style="width: 60px; margin: 5px;">Start</button>
+                    <button class="button is-small fa-solid fa-minus is-rounded" onclick="increment_bpm(-1)"
+                        style="width: 20px; margin: 5px;"></button>
+                    <input id="my_bpm_input_range" type="range" onchange="change_bpm_range()" min="40" max="200"
+                        step="1" value="{{last_session.bpm}}"  style="width: 120px; margin: 5px;"/>
+                    <button class="button is-small fa-solid fa-plus is-rounded" onclick="increment_bpm(1)" 
+                        style="width: 20px; margin: 5px;"></button>
+
+                
+            </div> 
+            <div style="margin: 2px; display: flex; align-items: center;">
+                <input class="input is-small has-text-centered" id="minutes" value=4 type="number" inputmode="decimal" style="width: 55px; margin: 5px; margin-left: 10px;"></input>
+                <meter id="timer_progressbar" min=0 style="width: 135px;height: 20px; margin: 5px;-webkit-appearance: none; -moz-appearance: none; appearance: none;"></meter>
+                <p id="time" style="width: 70px; position: relative; right: 100px;"></p>
+                <button class="button is-light is-small is-rounded fa-solid fa-play" id="timer_start_pause_button" onclick="start_pause_timer()" style="width: 20px; margin: 5px; position: relative; right: 62px"></button>
+                <button class="button is-light is-small is-rounded fa-solid fa-rotate-left" onclick="reset_timer()"  style="width: 20px; margin: 5px; position: relative; right: 64px""></button>
+                
+            </div> 
+            <button id="sidebar__trigger" onclick="sidebar_hide_show()" class="button is-white fa-solid fa-circle-chevron-right sidebartrigger" style="position: relative; left: 285px;bottom: 80px; height: 85px;"></button>
         </div>
 
     </div>
+
+
+
+
+
+
+
+    <script>
+
+        var toggleEl
+        var noSleep 
+
+        noSleep = new NoSleep();
+  
+        toggleEl = document.querySelector("#sidebar__trigger");
+        toggleEl.addEventListener('click', function() {
+            noSleep.enable(); // keep the screen on!
+        }, false);
+      </script>
 </body>
 
 </html>
