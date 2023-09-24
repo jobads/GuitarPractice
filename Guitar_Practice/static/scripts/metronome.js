@@ -96,7 +96,7 @@ function play() {
 
     for (var i = 0; i < iterations; i++) {
         // calc how loud, calc if this beat should be the louder "accented" beat
-        volume = 0.5
+        volume = 1
         schedule_one_click(now + (i * interval_in_seconds), volume)
     }
 

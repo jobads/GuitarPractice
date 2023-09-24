@@ -58,6 +58,8 @@ margin: 0;">
             <hr>
         </div>
         
+
+        
         <div class="r_flex_expand_child" style="flex:1;
         overflow-y:auto;  margin: 0.3em; display: block; margin-bottom: 20px; margin-top: -1em;">
             <table class="table is-hoverable is-fullwidth is-size-7">
@@ -74,7 +76,7 @@ margin: 0;">
                 </thead>
                 <tbody>
                     {% for task in task_list %}
-                    <tr style="border-bottom-style: hidden; line-height:10px;">
+                    <tr style="border-bottom-style: hidden; line-height:10px;" class="{{task.last_session_date}}">
                         <td style="width: 35vw;">{{task.last_session_date}}</td>
                         <td style="width: 65vw;"><a class="task_list_name" href="/task/{{ task.id }}" style="font-size: 14px;">{{ task.title }}</a></td>
                         <td rowspan="2" style="vertical-align : middle;text-align:right;">
@@ -88,7 +90,7 @@ margin: 0;">
                             </form>
                         </td>
                     </tr>
-                    <tr style="line-height:5px;">
+                    <tr style="line-height:5px;"  class="{{task.last_session_date}}">
                         <td colspan="2"><span class="meter_label" style="width: 10vw; display: inline-block;">{{ task.bpm }} </span>
                             <meter id="progressbar" value="{{task.bpm}}" min="0" max="{{task.target_bpm}}" style="width: 40vw;"></meter>
                             <span class="meter_label">{{ task.target_bpm }} </span>
@@ -101,6 +103,18 @@ margin: 0;">
         </div>
 
     </div>
+
+
+    <script>
+        today = new Date()
+        today = today.toISOString().split('T')[0]
+        console.log(today)
+        todaytasks = document.getElementsByClassName(today);
+        for (var i = 0; i < todaytasks.length; ++i) {
+            var task = todaytasks[i];  
+            task.style.backgroundColor= "#96FF96";
+        }
+    </script>
 </body>
 
 </html>

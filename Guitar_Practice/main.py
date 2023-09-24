@@ -22,6 +22,7 @@ def profile():
 
 
 @main.get("/task_list")
+@login_required
 def task_list():
     user_id = current_user.get_id()
     max_bpms = db.session.query(sessions.task_id, func.max(sessions.bpm).label("bpm")).filter(sessions.user_id == user_id).group_by(sessions.task_id).subquery()
@@ -38,6 +39,7 @@ def task_list():
 
 # @main.route("/add", methods=["POST"])
 @main.post("/add")
+@login_required
 def add():
     title = request.form.get("title")
     target_bpm = request.form.get("target_bpm")
@@ -49,6 +51,7 @@ def add():
 
 
 @main.post("/delete")
+@login_required
 def delete():
     task_id = request.form.get("task_id")
     task = db.session.query(tasks).filter(tasks.id == task_id).first()
@@ -63,6 +66,7 @@ def delete():
 
 
 @main.post("/addsession")
+@login_required
 def addsession():
     task_id = int(request.form.get("task_id"))
     date = datetime.strptime(request.form.get("date"), "%Y-%m-%d")
@@ -75,6 +79,7 @@ def addsession():
 
 
 @main.post("/deletesession")
+@login_required
 def deletesession():
     task_id = request.form.get("task_id")
     session_id = request.form.get("session_id")
@@ -89,6 +94,7 @@ def deletesession():
 
 
 @main.get("/task/<int:task_id>")
+@login_required
 def task_detail(task_id):
     # todo = Todo.query.filter_by(id=todo_id).first()
     user_id = current_user.get_id()
