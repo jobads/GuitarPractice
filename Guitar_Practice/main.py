@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, Blueprint
+from flask import Flask, render_template, request, redirect, url_for, Blueprint, send_file
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, login_required, current_user
 from sqlalchemy import desc, func
@@ -10,6 +10,10 @@ from . import db
 
 
 main = Blueprint('main', __name__)
+
+@main.route('/manifest.json')
+def serve_manifest():
+    return send_file('manifest.json', mimetype='application/manifest+json')
 
 @main.route('/')
 def index():
