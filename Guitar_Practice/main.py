@@ -109,7 +109,7 @@ def task_detail(task_id):
     today = datetime.today().strftime("%Y-%m-%d")
 
 
-    data = [[[session.date.year, session.date.month,session.date.day], session.bpm] for session in session_list]
+    data = [[[session.date.year, session.date.month-1,session.date.day], session.bpm] for session in session_list]
 
     return render_template("task_detail.html", task=task, session_list = session_list, today = today, last_session = last_session, data=data)
 
